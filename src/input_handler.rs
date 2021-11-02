@@ -86,12 +86,7 @@ impl<Backend> AnvilState<Backend> {
 
     fn on_pointer_button<B: InputBackend>(&mut self, evt: B::PointerButtonEvent) {
         let serial = SCOUNTER.next_serial();
-        let button = match evt.button() {
-            input::MouseButton::Left => 0x110,
-            input::MouseButton::Right => 0x111,
-            input::MouseButton::Middle => 0x112,
-            input::MouseButton::Other(b) => b as u32,
-        };
+        let button = evt.button_code();
         let state = match evt.state() {
             input::ButtonState::Pressed => {
                 // change the keyboard focus unless the pointer is grabbed
@@ -150,12 +145,7 @@ impl<Backend> AnvilState<Backend> {
 
 #[cfg(feature = "backend_winit")]
 impl AnvilState<WinitData> {
-    pub fn process_input_event<B>(&mut self, event: InputEvent<B>)
-    where
-        B: InputBackend<SpecialEvent = smithay::backend::winit::WinitEvent>,
-    {
-        use smithay::backend::winit::WinitEvent;
-
+    pub fn process_input_event<B: InputBackend>(&mut self, event: InputEvent<B>) {
         match event {
             InputEvent::Keyboard { event, .. } => match self.keyboard_key_to_action::<B>(event) {
                 KeyAction::None => {}
@@ -206,7 +196,7 @@ impl AnvilState<WinitData> {
             InputEvent::PointerMotionAbsolute { event, .. } => self.on_pointer_move_absolute::<B>(event),
             InputEvent::PointerButton { event, .. } => self.on_pointer_button::<B>(event),
             InputEvent::PointerAxis { event, .. } => self.on_pointer_axis::<B>(event),
-            InputEvent::Special(WinitEvent::Resized { size, .. }) => {
+/*             InputEvent::Special(WinitEvent::Resized { size, .. }) => {
                 self.output_map.borrow_mut().update_mode_by_name(
                     Mode {
                         size,
@@ -219,7 +209,7 @@ impl AnvilState<WinitData> {
                 let output = output_mut.find_by_name(crate::winit::OUTPUT_NAME).unwrap();
 
                 self.window_map.borrow_mut().layers.arange_layers(output);
-            }
+            } */
             _ => {
                 // other events are not handled in anvil (yet)
             }
