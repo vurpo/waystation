@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 bitflags = "1.2.1"
-input = { version = "0.6.0", features = ["udev"], optional = true }
+input = { version = "0.7.0", features = ["udev"], optional = true }
 thiserror = "1"
 xcursor = { version = "0.3.3", optional = true }
 image = { version = "0.23.14", default-features = false, optional = true }
@@ -33,7 +33,7 @@ petgraph = "0.4"
 gilrs = "0.8"
 
 [dependencies.smithay]
-path = "../smithay"
+git = "https://github.com/smithay/Smithay"
 default-features = false
 features = [ "wayland_frontend", "slog-stdlog" ]
 
